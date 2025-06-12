@@ -106,10 +106,7 @@ export class HashMap {
   keys() {
     // Returns an array containing all the keys inside the hash map
     const keys = [];
-    for (let key of this.buckets) {
-      keys.push(key);
-    }
-    return keys;
+    const entries = this.entries();
   }
   values() {
     // Returns an array containing all the values
