@@ -115,6 +115,23 @@ export class HashMap {
   entries() {
     // Returns an array that contains each key,value pair.
     // Example: [[firstKey, firstValue], [secondKey, secondValue]]
+    const entries = [];
+    const collisionedBuckets = [];
+    for (let bucket of this.buckets) {
+      if (!bucket)
+        // if the bucket is undefined skip to the next bucket
+        continue;
+      if (bucket.size > 1) {
+        // if the bucket has more than one element means we have to 
+        // iterate over that bucket too. So we save it for later
+        // (To not do nested loops)
+        collisionedBuckets.push(bucket)
+      } else {
+        entries.push(bucket.head)
+      }
+    }
+    collisionedBuckets.forEach(bucket => entries.push(bucket))
+    return entries;
   }
 
 }
