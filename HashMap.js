@@ -126,11 +126,11 @@ export class HashMap {
         // (To not do nested loops)
         let node = bucket.head;
         while (node) {
-          entries.push(node);
+          entries.push([node.key, node.value]);
           node = node.nextNode
         }
       } else {
-        entries.push(bucket.head)
+        entries.push([bucket.head.key, bucket.head.value])
       }
     }
     return entries;
