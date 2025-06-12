@@ -107,9 +107,15 @@ export class HashMap {
     // Returns an array containing all the keys inside the hash map
     const keys = [];
     const entries = this.entries();
+    entries.forEach(entry => keys.push(entry[0]))
+    return keys;
   }
   values() {
     // Returns an array containing all the values
+    const values = [];
+    const entries = this.entries();
+    entries.forEach(entry => values.push(entry[1]))
+    return values;
   }
 
   entries() {
