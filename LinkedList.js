@@ -6,11 +6,12 @@ export class LinkedList {
   append(node) {
     // Adds a new node containing @value to the end of the list
     if (this.#size !== 0) {
-      const lastNode = this.at(this.#size - 1);
+      const lastNode = this.tail;
       lastNode.nextNode = node;
+    } else {
+      this.#list[this.#size] = node;
+      this.#size ++;
     }
-    this.#list[this.#size] = node;
-    this.#size ++;
   }
 
   prepend(node) {
