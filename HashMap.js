@@ -1,7 +1,7 @@
 import { LinkedList } from './LinkedList.js';
 
 export class HashMap {
-  #loadFactor = 0.9;
+  #loadFactor = 0.75;
   #capacity = 16; // Number of buckets
   buckets = new Array(16);
 
@@ -29,42 +29,30 @@ export class HashMap {
     // Creates a new key-value pair. 
     // If the key already exits just update its value
 
-    // console.log(this.buckets.length * this.#loadFactor)
+    // TODO: Make the buckets list grow when is close to be full.
+    if (this.entries().length * this.#loadFactor === 9) {
+      this.#capacity = this.#capacity * 2;
+      // console.log(this.entries().length);
+      // console.log('capacity: ', this.#capacity)
+      // TODO: finish it
+    }
 
     const index = this.#getBucketIndex(key)
     const newPair = new Node(key, value);
     const nodesList = this.buckets[index]
-    // Create a linked List to avoid future collisions 
-    const newNodesList = new LinkedList();
 
     // If there is nothing in the bucket
-    if (!this.buckets[index]) {
+    if (!nodesList) {
+      // Create a linked List to avoid future collisions
+      const newNodesList = new LinkedList();
       // Add the new key-pair value to the list
       newNodesList.append(newPair);
       // Associate that bucket to the list and its elements
       this.buckets[index] = newNodesList;
-      return;
+    } else {
+      // Add the new value to the existing list
+      nodesList.append(newPair);
     }
-
-    let node = nodesList.head;
-    // If There is at least one thing in the bucket
-    while (node) {
-      // Check if the node in the bucket is what we're looking for
-      if (node.key === newPair.key) {
-        // If it is, add the new key-value pair to the new list
-        newNodesList.append(newPair);
-      } else {
-        // If the node is not the one we're looking for
-        // Add the rest of the nodes to the list so we don't loose data
-        newNodesList.append(node);
-        // Move the cursor to the next node to repeat the process
-        let nextNode = node.nextNode;
-        node = nextNode;
-      }
-    }
-
-    this.buckets[index] = newNodesList;
-
   }
 
   get(key) {
@@ -93,6 +81,8 @@ export class HashMap {
 
   get length() {
     // Returns the number of keys stored in the hash map
+    // TODO: inlclude the the extra keys that might be in a bucket
+    return this.entries().length;
   }
 
   clear() {
