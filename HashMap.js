@@ -78,8 +78,7 @@ export class HashMap {
 
   has(key) {
     // Returns true or false based on whether or not the key is in the hash map
-    const index = this.#getBucketIndex(key);
-    return this.buckets[index] ? true : false;
+    return Boolean(this.get(key))
   }
 
   remove(key) {
