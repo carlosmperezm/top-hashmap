@@ -99,7 +99,8 @@ export class HashMap {
 
   clear() {
     // Remove all entries in the hash map
-    this.buckets = new Array(16)
+    this.#capacity = 16;
+    this.buckets = new Array(this.#capacity);
   }
 
   keys() {
