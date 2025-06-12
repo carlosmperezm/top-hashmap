@@ -29,11 +29,12 @@ export class HashMap {
     // Creates a new key-value pair. 
     // If the key already exits just update its value
 
-    // TODO: Make the buckets list grow when is close to be full.
-    if (this.entries().length * this.#loadFactor === 9) {
+    // Make the buckets list grow when is close to be full.
+    if (this.length * this.#loadFactor >= 9) {
       this.#capacity = this.#capacity * 2;
-      // console.log(this.entries().length);
-      // console.log('capacity: ', this.#capacity)
+      console.log('capacity: ', this.#capacity)
+      // TODO: make the buckets spread evenly among the expanded buckets.
+
       // TODO: finish it
     }
 
@@ -59,7 +60,20 @@ export class HashMap {
     // Returns the value assigned to that key.
     // If a key is not found, return null
     const index = this.#getBucketIndex(key);
-    return this.buckets[index];
+    const bucket = this.buckets[index];
+    // If the bucket does not exist return null because 
+    // that means that the key neither exists because there is no
+    // bucket to store it
+    if (!bucket) {
+      return null;
+    }
+    // If the bucket exits
+    let node = bucket.head;
+    while (node) {
+      if (node.key === key) return node.value;
+      else node = node.nextNode;
+    }
+    return null;
   }
 
   has(key) {
@@ -81,7 +95,6 @@ export class HashMap {
 
   get length() {
     // Returns the number of keys stored in the hash map
-    // TODO: inlclude the the extra keys that might be in a bucket
     return this.entries().length;
   }
 
@@ -106,7 +119,6 @@ export class HashMap {
     // Returns an array that contains each key,value pair.
     // Example: [[firstKey, firstValue], [secondKey, secondValue]]
     const entries = [];
-    const collisionedBuckets = [];
     for (let bucket of this.buckets) {
       if (!bucket)
         // if the bucket is undefined skip to the next bucket
@@ -115,12 +127,15 @@ export class HashMap {
         // if the bucket has more than one element means we have to 
         // iterate over that bucket too. So we save it for later
         // (To not do nested loops)
-        collisionedBuckets.push(bucket)
+        let node = bucket.head;
+        while (node) {
+          entries.push(node);
+          node = node.nextNode
+        }
       } else {
         entries.push(bucket.head)
       }
     }
-    collisionedBuckets.forEach(bucket => entries.push(bucket))
     return entries;
   }
 
