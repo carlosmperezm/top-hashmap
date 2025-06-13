@@ -97,19 +97,15 @@ export class HashMap {
     const index = this.#getBucketIndex(key);
     const entry = this.buckets[index];
     // If the bucket exits
-    if (!entry) return false;
+    if (!this.has(key)) return false;
 
     if (entry.size > 1) {
       let nodeIndex = this.buckets[index].find(key);
-      console.log('node Index: ', nodeIndex)
-      console.log(this.buckets[index].toString())
       delete this.buckets[index].removeAt(nodeIndex);
-      console.log(this.buckets[index].toString())
-      return true;
     } else {
       delete this.buckets[index];
-      return true;
     }
+    return true;
   }
 
   get length() {
