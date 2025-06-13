@@ -10,8 +10,8 @@ export class LinkedList {
       lastNode.nextNode = node;
     } else {
       this.#list[this.#size] = node;
-      this.#size ++;
     }
+    this.#size ++;
   }
 
   prepend(node) {
@@ -57,27 +57,25 @@ export class LinkedList {
     // Unlink the nodes
     currentNode.nextNode = null;
     this.#size --;
-
-
   }
 
-  contains(value) {
+  contains(node) {
     // Returns true if the passed in value is in the list
     // and otherwise returns false.
     let currentNode = this.head;
     for (let i = 0; i < this.#size; i++) {
-      if (currentNode.value === value) return true;
+      if (currentNode === node) return true;
       let nextNode = currentNode.nextNode;
       currentNode = nextNode;
     }
     return false;
   }
 
-  find(value) {
+  find(nodeKey) {
     // Returns the index of the node containing value, or null if not found.
     let currentNode = this.head;
     for (let i = 0; i < this.#size; i++) {
-      if (currentNode.value === value) return i;
+      if (currentNode.key === nodeKey) return i;
       let nextNode = currentNode.nextNode;
       currentNode = nextNode;
     }
