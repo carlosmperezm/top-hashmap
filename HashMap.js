@@ -59,7 +59,8 @@ export class HashMap {
       // Associate that bucket to the list and its elements
       this.buckets[index] = newNodesList;
     } else if (this.has(key)) {
-      // ...
+      this.remove(key);
+      this.set(key, value)
     } else {
       // Add the new value to the existing list
       nodesList.append(newPair);
