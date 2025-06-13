@@ -11,31 +11,39 @@ export class HashMap {
 
     const primeNumber = 31;
     for (let i = 0; i < key.length; i++) {
-      hashCode = primeNumber * hashCode + key.charCodeAt(i);
+      hashCode = (primeNumber * hashCode + key.charCodeAt(i)) % this.#capacity;
     }
 
     return hashCode;
+  }
+  get capacity() {
+    return this.#capacity;
+  }
+  set capacity(newCapacity) {
+    this.#capacity = newCapacity;
   }
 
   #getBucketIndex(key) {
     const hashCode = this.hash(key);
     const index = hashCode % this.#capacity;
-
     return index;
-
   }
 
   set(key, value) {
     // Creates a new key-value pair. 
     // If the key already exits just update its value
-
+    let maxNumber = 9
     // Make the buckets list grow when is close to be full.
-    if (this.length * this.#loadFactor >= 9) {
-      this.#capacity = this.#capacity * 2;
-      console.log('capacity: ', this.#capacity)
-      // TODO: make the buckets spread evenly among the expanded buckets.
-
-      // TODO: finish it
+    if (this.length * this.#loadFactor >= maxNumber) {
+      const newHashMap = new HashMap();
+      newHashMap.capacity = this.#capacity * 2
+      newHashMap.buckets = new Array(newHashMap.capacity)
+      for (let entry of this.entries()) {
+        newHashMap.set(entry[0], entry[1]);
+      }
+      this.buckets = newHashMap.buckets;
+      this.capacity = newHashMap.capacity;
+      maxNumber * 2
     }
 
     const index = this.#getBucketIndex(key)
@@ -50,6 +58,8 @@ export class HashMap {
       newNodesList.append(newPair);
       // Associate that bucket to the list and its elements
       this.buckets[index] = newNodesList;
+    } else if (this.has(key)) {
+      // ...
     } else {
       // Add the new value to the existing list
       nodesList.append(newPair);
@@ -85,11 +95,20 @@ export class HashMap {
     // Remove the entry with that key and return true. Otherwise false.
     const index = this.#getBucketIndex(key);
     const entry = this.buckets[index];
-    if (entry) {
+    // If the bucket exits
+    if (!entry) return false;
+
+    if (entry.size > 1) {
+      let nodeIndex = this.buckets[index].find(key);
+      console.log('node Index: ', nodeIndex)
+      console.log(this.buckets[index].toString())
+      delete this.buckets[index].removeAt(nodeIndex);
+      console.log(this.buckets[index].toString())
+      return true;
+    } else {
       delete this.buckets[index];
       return true;
     }
-    return false;
   }
 
   get length() {
